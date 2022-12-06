@@ -1,0 +1,187 @@
+<head>
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+<script src="https://momentjs.com/downloads/moment-timezone.js"></script>
+<script src="https://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+<link rel="stylesheet" href="https://theretrosimulatorstimulator.neocities.org/center.css">
+<meta property="og:title" content="Huh. Seems you have been sent a countdown." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://i.ibb.co/5x2DGtH/3-sin-t-tulo-20221205011201.png" />
+<meta property="og:description" content="Well, click to see it, i guess." />
+<meta name="theme-color" content="#FF0000">
+
+<!-- Include this to make the og:image larger -->
+<meta name="twitter:card" content="summary_large_image">
+<title>Countdown</title>
+<center><div class="spinner" id="spinner"></div></center>
+<center><h1 id="name"></h1></center>
+<center><p id="countdown"></p></center>
+<center><b><p id="credits">If you find any error, add me on discord as "G1nX#0746".</p></b></center>
+<img src="https://http.cat/400" id="badrequest" hidden class="center">
+<style>
+.darkmode {
+background-color: #171717;
+color: white;
+}
+
+.spinner {
+   width: 56px;
+   height: 56px;
+   border-radius: 50%;
+   background: radial-gradient(farthest-side,#ff9547 94%,#0000) top/9px 9px no-repeat,
+          conic-gradient(#0000 30%,#ff9547);
+   -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
+   animation: spinner-c7wet2 1s infinite linear;
+}
+
+@keyframes spinner-c7wet2 {
+   100% {
+      transform: rotate(1turn);
+   }
+}
+</style>
+
+<script>
+var debug = false // reminder to turn this false after testing, but turn it back true when needed
+
+/* function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+} */
+
+const queryString = window.location.search;
+
+const urlParams = new URLSearchParams(queryString);
+
+if (!urlParams.has('count')) {
+document.title = 'What on earth were you expecting?';
+document.body.style.backgroundColor = 'black';
+$("#spinner").hide();
+$("#badrequest").show();
+}
+
+console.log(queryString);
+
+var datetocount = urlParams.get('count')
+console.log(datetocount);
+
+var name = urlParams.get('name')
+console.log(name);
+
+document.getElementById("name").innerHTML = "Loading countdown..."
+
+var darkModeEnabled = urlParams.get("darkModeEnable")
+
+if (darkModeEnabled == 'true') {
+var root = document.getElementsByTagName( 'html' )[0]; // '0' to assign the first (and only `HTML` tag)
+root.setAttribute( 'class', 'darkmode' );
+}
+
+var font = urlParams.get('font')
+
+font = font.replaceAll('+',' ');
+
+try {
+  eval('document.body.style.fontFamily = font')
+}
+catch(err) {
+  console.error("Oops! There was an error. " + err.name)
+}
+
+var timetocount = urlParams.get('time')
+var timezone = urlParams.get('timezone').replaceAll("_", " ")
+console.log(timetocount);
+console.log(timezone);
+
+datetocount = datetocount + ' ' + timetocount.toString()
+console.log(datetocount);
+
+/*
+datetocount = moment(datetocount, "YY-MM-DD HH:MM").toString()
+console.log(datetocount); 
+*/
+
+/*function calcTime(offset) {
+    // create Date object for current location
+    var d = new Date();
+
+    // convert to msec
+    // subtract local time zone offset
+    // get UTC time in msec
+    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+    // create new Date object for different city
+    // using supplied offset
+    var nd = new Date(utc + (3600000*offset));
+
+    // return time as a string
+    return nd.toLocaleString();
+}*/
+
+// Set the date we're counting down to
+var countDownDate = new Date(datetocount).getTime();
+
+function epoch(date) {
+  return Date.parse(date)
+}
+
+function checkTimezoneText() {
+if (timezone != "userdependant") {
+return " | The timezone of this countdown is " + timezone + ".";
+} else {
+return " | The timezone of this countdown depends on your local day and time.";
+}
+
+}
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  var now = 0
+  var dateToday = 0
+
+  if (timezone != "userdependant") {
+  dateToday = epoch(moment().tz(timezone).format("YYYY-MM-DD HH:mm:ss"))
+  now = dateToday
+  console.log(dateToday) // This is the epoch timestamp of the timezone's time
+  } else {
+  now = new Date().getTime();
+  console.log(now)
+  }
+
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+  $("#spinner").hide();
+  document.getElementById("name").innerHTML = name
+  // Display the result in the element with id="demo"
+  document.getElementById("countdown").innerHTML = days + " days - " + hours + " hours - "
+  + minutes + " minutes - " + seconds + " seconds" + checkTimezoneText()
+
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("countdown").innerHTML = "EXPIRED";
+  }
+}, 1000);
+
+var errormsg = "Sorry, there was an error displaying the countdown."
+
+window.onerror = function(error) {
+  // do something clever here
+  alert(errormsg);
+};
+
+</script>
+</head>

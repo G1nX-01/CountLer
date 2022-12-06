@@ -1,0 +1,348 @@
+<head>
+<title>CountLer</title>
+<link rel="stylesheet" href="https://theretrosimulatorstimulator.neocities.org/center.css">
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/posabsolute/jQuery-Validation-Engine@master/js/jquery.validationEngine.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/gh/posabsolute/jQuery-Validation-Engine@master/js/languages/jquery.validationEngine-en.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/posabsolute/jQuery-Validation-Engine@master/css/validationEngine.jquery.css">
+<!-- META tags below -->
+<meta property="og:title" content="CountLer" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://i.ibb.co/5x2DGtH/3-sin-t-tulo-20221205011201.png" />
+<meta property="og:description" content="Create countdowns for any website!" />
+<meta name="theme-color" content="#FF0000">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+
+.mousehover {
+ cursor: pointer;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: grey;
+  color: white;
+  text-align: center;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #171717;
+        color: white;
+    }
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: white;
+        color: black;
+    }
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+html {
+font-family: 'Rubik', sans-serif;
+}
+
+.title {
+text-shadow: horizontal-shadow vertical-shadow blur color;
+text-shadow:1px 1px 10px #fff, 1px 1px 10px #ccc;
+font-family: 'Kdam Thmor Pro', sans-serif;
+}
+
+.buttonClass {
+  font-size:15px;
+  font-family:Arial;
+  width:140px;
+  height:50px;
+  border-width:1px;
+  color:#ffffff;
+  border-color:#d83526;
+  font-weight:bold;
+  border-top-left-radius:6px;
+  border-top-right-radius:6px;
+  border-bottom-left-radius:6px;
+  border-bottom-right-radius:6px;
+  box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  background:linear-gradient(#fc8d83, #e4685d);
+}
+
+.buttonClass:hover {
+  background: linear-gradient(#e4685d, #fc8d83);
+}
+              
+</style>
+</head>
+<body>
+<h1 class="title">CountLer</h1> <!-- I deleted the center tag, because it would cause graphical trouble in notebooks/laptops. -->
+<div id="countdownform" class="center" style="border-style: solid; padding: 10px;">
+<form id="therealform" action="javascript:void(0);">
+(stuff that has the <span style="color: red">*</span> symbol is REQUIRED)
+
+<hr>
+
+  <label>
+	<h2>Main Info</h2>
+	<p> </p>
+	<hr>
+	What's the name of the countdown? <span style="color: red">*</span>
+	<p> </p>
+	<input type="text" id="countname" name="countdown" placeholder="Time until my next birthday" size="30" maxlength="40" class="validate[required,minSize[4]]" autocomplete="off"></input>
+	<p> </p>
+	To what date do you want to count to? <span style="color: red">*</span>
+		<p> </p>
+		<input type="date" name="count" data-date="" data-date-format="DD MMMM YYYY" id="datechooser" class="validate[required,custom[date]]"/>
+    <p> </p>
+   	To what time? <span style="color: red">*</span>
+   	<p> </p>
+   <input type="time" name="time" id="timechooser" class="validate[required]">
+	  <script>
+	  var datepicker = document.getElementById('datechooser');
+      datepicker.min = new Date().toISOString().split('T')[0];
+  </script>
+	<script>
+      // once i find a solution for setting the minimum of the time chooser,
+	  // i'll use this empty script tag.
+	</script>
+  <p> </p>
+  What timezone will the countdown use?
+  <p> </p>
+<select id="timezone" class="validate[required]">
+   <optgroup label="Default">
+   <option value="UTC">UTC</option>
+   </optgroup>
+   <optgroup label="Timezones">
+   <option value="Etc/GMT+12">(GMT-12:00) International Date Line West</option>
+   <option value="Pacific/Midway">(GMT-11:00) Midway Island, Samoa</option>
+   <option value="Pacific/Honolulu">(GMT-10:00) Hawaii</option>
+   <option value="US/Alaska">(GMT-09:00) Alaska</option>
+   <option value="America/Los_Angeles">(GMT-08:00) Pacific Time (US & Canada)</option>
+   <option value="America/Tijuana">(GMT-08:00) Tijuana, Baja California</option>
+   <option value="US/Arizona">(GMT-07:00) Arizona</option>
+   <option value="America/Chihuahua">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
+   <option value="US/Mountain">(GMT-07:00) Mountain Time (US & Canada)</option>
+   <option value="America/Managua">(GMT-06:00) Central America</option>
+   <option value="US/Central">(GMT-06:00) Central Time (US & Canada)</option>
+   <option value="America/Mexico_City">(GMT-06:00) Guadalajara, Mexico City, Monterrey</option>
+   <option value="Canada/Saskatchewan">(GMT-06:00) Saskatchewan</option>
+   <option value="America/Bogota">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</option>
+   <option value="US/Eastern">(GMT-05:00) Eastern Time (US & Canada)</option>
+   <option value="US/East-Indiana">(GMT-05:00) Indiana (East)</option>
+   <option value="Canada/Atlantic">(GMT-04:00) Atlantic Time (Canada)</option>
+   <option value="America/Caracas">(GMT-04:00) Caracas, La Paz</option>
+   <option value="America/Manaus">(GMT-04:00) Manaus</option>
+   <option value="America/Santiago">(GMT-04:00) Santiago</option>
+   <option value="Canada/Newfoundland">(GMT-03:30) Newfoundland</option>
+   <option value="America/Sao_Paulo">(GMT-03:00) Brasilia</option>
+   <option value="America/Argentina/Buenos_Aires">(GMT-03:00) Buenos Aires, Georgetown</option>
+   <option value="America/Godthab">(GMT-03:00) Greenland</option>
+   <option value="America/Montevideo">(GMT-03:00) Montevideo</option>
+   <option value="America/Noronha">(GMT-02:00) Mid-Atlantic</option>
+   <option value="Atlantic/Cape_Verde">(GMT-01:00) Cape Verde Is.</option>
+   <option value="Atlantic/Azores">(GMT-01:00) Azores</option>
+   <option value="Africa/Casablanca">(GMT+00:00) Casablanca, Monrovia, Reykjavik</option>
+   <option value="Etc/Greenwich">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
+   <option value="Europe/Amsterdam">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+   <option value="Europe/Belgrade">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+   <option value="Europe/Brussels">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+   <option value="Europe/Sarajevo">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
+   <option value="Africa/Lagos">(GMT+01:00) West Central Africa</option>
+   <option value="Asia/Amman">(GMT+02:00) Amman</option>
+   <option value="Europe/Athens">(GMT+02:00) Athens, Bucharest, Istanbul</option>
+   <option value="Asia/Beirut">(GMT+02:00) Beirut</option>
+   <option value="Africa/Cairo">(GMT+02:00) Cairo</option>
+   <option value="Africa/Harare">(GMT+02:00) Harare, Pretoria</option>
+   <option value="Europe/Helsinki">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
+   <option value="Asia/Jerusalem">(GMT+02:00) Jerusalem</option>
+   <option value="Europe/Minsk">(GMT+02:00) Minsk</option>
+   <option value="Africa/Windhoek">(GMT+02:00) Windhoek</option>
+   <option value="Asia/Kuwait">(GMT+03:00) Kuwait, Riyadh, Baghdad</option>
+   <option value="Europe/Moscow">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
+   <option value="Africa/Nairobi">(GMT+03:00) Nairobi</option>
+   <option value="Asia/Tbilisi">(GMT+03:00) Tbilisi</option>
+   <option value="Asia/Tehran">(GMT+03:30) Tehran</option>
+   <option value="Asia/Muscat">(GMT+04:00) Abu Dhabi, Muscat</option>
+   <option value="Asia/Baku">(GMT+04:00) Baku</option>
+   <option value="Asia/Yerevan">(GMT+04:00) Yerevan</option>
+   <option value="Asia/Kabul">(GMT+04:30) Kabul</option>
+   <option value="Asia/Yekaterinburg">(GMT+05:00) Yekaterinburg</option>
+   <option value="Asia/Karachi">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+   <option value="Asia/Calcutta">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+   <option value="Asia/Calcutta">(GMT+05:30) Sri Jayawardenapura</option>
+   <option value="Asia/Katmandu">(GMT+05:45) Kathmandu</option>
+   <option value="Asia/Almaty">(GMT+06:00) Almaty, Novosibirsk</option>
+   <option value="Asia/Dhaka">(GMT+06:00) Astana, Dhaka</option>
+   <option value="Asia/Rangoon">(GMT+06:30) Yangon (Rangoon)</option>
+   <option value="Asia/Bangkok">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+   <option value="Asia/Krasnoyarsk">(GMT+07:00) Krasnoyarsk</option>
+   <option value="Asia/Hong_Kong">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
+   <option value="Asia/Kuala_Lumpur">(GMT+08:00) Kuala Lumpur, Singapore</option>
+   <option value="Asia/Irkutsk">(GMT+08:00) Irkutsk, Ulaan Bataar</option>
+   <option value="Australia/Perth">(GMT+08:00) Perth</option>
+   <option value="Asia/Taipei">(GMT+08:00) Taipei</option>
+   <option value="Asia/Tokyo">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
+   <option value="Asia/Seoul">(GMT+09:00) Seoul</option>
+   <option value="Asia/Yakutsk">(GMT+09:00) Yakutsk</option>
+   <option value="Australia/Adelaide">(GMT+09:30) Adelaide</option>
+   <option value="Australia/Darwin">(GMT+09:30) Darwin</option>
+   <option value="Australia/Brisbane">(GMT+10:00) Brisbane</option>
+   <option value="Australia/Canberra">(GMT+10:00) Canberra, Melbourne, Sydney</option>
+   <option value="Australia/Hobart">(GMT+10:00) Hobart</option>
+   <option value="Pacific/Guam">(GMT+10:00) Guam, Port Moresby</option>
+   <option value="Asia/Vladivostok">(GMT+10:00) Vladivostok</option>
+   <option value="Asia/Magadan">(GMT+11:00) Magadan, Solomon Is., New Caledonia</option>
+   <option value="Pacific/Auckland">(GMT+12:00) Auckland, Wellington</option>
+   <option value="Pacific/Fiji">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option>
+   <option value="Pacific/Tongatapu">(GMT+13:00) Nuku'alofa</option>
+   </optgroup>
+   <optgroup label="Other">
+   <option value="userdependant">Depends of user's time</option>
+   </optgroup>
+</select>
+  </label>
+    <hr>
+	<h2>Customization</h2>
+	<hr>
+	<p> </p>
+	 What font do you want?
+	 <p> </p>
+    <select name="font" id="fontchooser" selected>
+    <option>Arial</option>
+    <option>Arial Black</option>
+	<option>Helvetica</option>
+	<option>Comic Sans MS</option>
+	<option>Verdana</option>
+	<option>Tahoma</option>
+	<option>Trebuchet MS</option>
+	<option>Courier</option>
+	<option>Brush Script MT</option>
+	<option>Georgia</option>
+	<option>Garamond</option>
+	<option>Courier New</option>
+  </select>
+	<p> </p>
+    Enable dark mode for the countdown?
+	<p> </p>
+	<label class="switch">
+  <input type="checkbox" id="darkModeEnable">
+  <span class="slider round"></span>
+  </label>
+    <hr>
+ <center><input type="submit" value="Continue" id="submitButton" class="buttonClass"></input></center>
+</form>
+   <div id="code" hidden>
+   <script>
+    	function generateCode() {
+		var timechosen = document.getElementById('timechooser').value
+		var iframe = document.getElementById("previewarea")
+		var result = 'https://' + window.location.hostname + '/CountLer/countdown.html?count=' + document.getElementById('datechooser').value + '&time=' + document.getElementById('timechooser').value.replaceAll(":","%3A") + '&font=' + document.getElementById('fontchooser').value + '&darkModeEnable=' + document.getElementById('darkModeEnable').checked + '&timezone=' + document.getElementById('timezone').value + '&name=' + document.getElementById('countname').value 
+		var code = '<iframe width="800" height="140" scrolling="no" src="' + result + '"</iframe>'
+		iframe.src = result
+		$('#textareacode').val(code);
+	    $('#code').show()
+		Toastify({
+         text: "Code done! Copy-paste it into any HTML project.",
+         style: {
+          background: "#66bf5e",
+		  color: "white",
+         }
+    }).showToast();
+	}
+	
+	// $("#therealform").validate();
+	 $(document).ready(function(){
+        $("#therealform").validationEngine('attach', {
+		onValidationComplete: function(form, status){
+
+        if (status == true){
+            generateCode()
+            return true;
+        }
+
+    }
+       });
+	 });
+   </script>
+    <h2>Here's the code for your countdown:</h2>
+	<textarea rows="4" cols="50" disabled style="resize: none;" id="textareacode"></textarea>
+	<h2>Preview:</h2>
+	<iframe src="https://example.com" width="800" height="140" scrolling="no" id="previewarea">
+  </div>
+  </div>
+<div class="footer">
+<p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><span property="dct:title">CountLer</span> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://linktr.ee/infog1nx">G1nX</a> is licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution-NonCommercial-ShareAlike 4.0 International<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></a></p>
+</div>
+<script>
+
+	</script>
+</body>

@@ -1,5 +1,35 @@
 <head>
 <title>CountLer</title>
+<style>
+.spinner {
+   width: 56px;
+   height: 56px;
+   border-radius: 50%;
+   background: radial-gradient(farthest-side,#ff9547 94%,#0000) top/9px 9px no-repeat,
+          conic-gradient(#0000 30%,#ff9547);
+   -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
+   animation: spinner-c7wet2 1s infinite linear;
+}
+
+@keyframes spinner-c7wet2 {
+   100% {
+      transform: rotate(1turn);
+   }
+}
+</style>
+<script type="text/javascript">
+var timerStart = Date.now();
+var activateledebug = false
+</script>
+<script type="text/javascript">
+(function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
+MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);
+
+// Enabling the debug mode flag is useful during implementation,
+// but it's recommended you remove it for production
+mixpanel.init('45d4910b83105f670cb024c84d065113', {debug: activateledebug}); 
+</script>
 <link rel="stylesheet" href="https://theretrosimulatorstimulator.neocities.org/center.css">
 <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 <script src="https://momentjs.com/downloads/moment.min.js"></script>
@@ -10,6 +40,7 @@
 <script src="https://cdn.jsdelivr.net/gh/posabsolute/jQuery-Validation-Engine@master/js/jquery.validationEngine.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://cdn.jsdelivr.net/gh/posabsolute/jQuery-Validation-Engine@master/js/languages/jquery.validationEngine-en.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/posabsolute/jQuery-Validation-Engine@master/css/validationEngine.jquery.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- META tags below -->
 <meta property="og:title" content="CountLer" />
 <meta property="og:type" content="website" />
@@ -142,8 +173,34 @@ font-family: 'Kdam Thmor Pro', sans-serif;
 }
               
 </style>
+<script src="cookie.min.js"></script>
 </head>
 <body>
+<script>
+  
+// A $(document).ready() block.
+$(window).ready(function() {
+	mixpanel.track('Sign up');
+	var totalLoadTime = Date.now()-timerStart.toString()
+	console.log("Time until everything loaded:", totalLoadTime, "ms");
+	
+	let user = getCookie("sawWarning");
+  if (user != "") {
+   // nothin'
+  } else {
+          Swal.fire({
+  title: 'Warning',
+  text: "This page uses some tools to track usage. Leave NOW if you're a chicken and don't like that.",
+  icon: 'warning',
+  confirmButtonText: 'Cool.'
+}).then((result) => {
+setCookie("sawWarning", "true", 365);
+})
+  }
+	
+	
+});
+</script>
 <h1 class="title">CountLer</h1> <!-- I deleted the center tag, because it would cause graphical trouble in notebooks/laptops. -->
 <div id="countdownform" class="center" style="border-style: solid; padding: 10px;">
 <form id="therealform" action="javascript:void(0);">
@@ -300,9 +357,13 @@ font-family: 'Kdam Thmor Pro', sans-serif;
     <hr>
  <center><input type="submit" value="Continue" id="submitButton" class="buttonClass"></input></center>
 </form>
+<center><div class="spinner" id="spinner" hidden></div></center>
    <div id="code" hidden>
    <script>
     	function generateCode() {
+		$("#spinner").show();
+		mixpanel.track('Submitted countdows');
+		console.log("Event was sent to mixpanel")
 		var timechosen = document.getElementById('timechooser').value
 		var iframe = document.getElementById("previewarea")
 		var result = 'https://' + window.location.hostname + '/CountLer/countdown.html?count=' + document.getElementById('datechooser').value + '&time=' + document.getElementById('timechooser').value.replaceAll(":","%3A") + '&font=' + document.getElementById('fontchooser').value + '&darkModeEnable=' + document.getElementById('darkModeEnable').checked + '&timezone=' + document.getElementById('timezone').value + '&name=' + document.getElementById('countname').value 
@@ -317,6 +378,8 @@ font-family: 'Kdam Thmor Pro', sans-serif;
 		  color: "white",
          }
     }).showToast();
+	$("#spinner").hide();
+	console.log("All done!")
 	}
 	
 	// $("#therealform").validate();

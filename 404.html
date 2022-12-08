@@ -1,0 +1,78 @@
+<head>
+<script src="https://h3.neocities.org/autoplay_enable.js"></script>
+<link rel="stylesheet" href="https://theretrosimulatorstimulator.neocities.org/center.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+html {
+  margin:0;
+  height:100%;
+  overflow:hidden;
+  background: url(https://bit.ly/3iEsFN3) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.title {
+  font-family: 'Kdam Thmor Pro', sans-serif;
+}
+
+body {
+  animation: fadeInAnimation ease 3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+.box {
+position:absolute;
+z-index:99;
+background: rgba(255, 255, 255, 0.5)
+}
+
+p {
+font-family: 'Roboto Mono', monospace;
+}
+
+h2 {
+font-family: 'Roboto Mono', monospace;
+}
+</style>
+</head>
+<body style="color: green;">
+<div class="bg-container"></div>
+<div id="box" class="center box" style="border-style: solid; padding: 10px;">
+<h1 class="title">Oh no...</h1>
+<p>Seems you went too far and accidentally discovered the engineer!</p>
+<p>Don't worry. We will take you to where you came from right away.</p>
+<center><h2 id="countdown" style="border-style: solid; padding: 10px;"></h2></center>
+</div>
+<script>
+var i = 10;
+let l = history.length;
+console.log(l)
+var interval = setInterval(function() {
+  document.getElementById("countdown").innerHTML = i;
+  i--;
+  if (i < 0) {
+    clearInterval(interval);
+	if (l > 1) {
+	history.back()
+	} else {
+	 window.location.href = "index.html";
+	}
+  }
+}, 1000);
+</script>
+</body>

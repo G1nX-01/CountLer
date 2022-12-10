@@ -149,7 +149,9 @@ var dateToday = 0
   now = Number(dateToday)
   console.log(now) // This is the epoch timestamp of the timezone's time
   } else {
-  now = new Date().getTime();
+  var smth = new Date(countDownDate).getTime().toString()
+  now = smth.slice(0, -3);
+  now = Number(now)
   console.log(now)
   }
 

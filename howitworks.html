@@ -1,0 +1,141 @@
+<head>
+<title>Countler - How does it work?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+
+.mousehover {
+ cursor: pointer;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: grey;
+  color: white;
+  text-align: center;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #171717;
+        color: white;
+    }
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: white;
+        color: black;
+    }
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+html {
+font-family: 'Rubik', sans-serif;
+}
+
+.title {
+text-shadow: horizontal-shadow vertical-shadow blur color;
+text-shadow:1px 1px 10px #fff, 1px 1px 10px #ccc;
+font-family: 'Kdam Thmor Pro', sans-serif;
+}
+
+.buttonClass {
+  font-size:15px;
+  font-family:Arial;
+  width:140px;
+  height:50px;
+  border-width:1px;
+  color:#ffffff;
+  border-color:#d83526;
+  font-weight:bold;
+  border-top-left-radius:6px;
+  border-top-right-radius:6px;
+  border-bottom-left-radius:6px;
+  border-bottom-right-radius:6px;
+  box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+  background:linear-gradient(#fc8d83, #e4685d);
+}
+
+.buttonClass:hover {
+  background: linear-gradient(#e4685d, #fc8d83);
+}
+</style>
+<link rel="stylesheet" href="https://theretrosimulatorstimulator.neocities.org/center.css">
+</head>
+<body>
+<h1 class="title" onclick='window.location.href = "index.html"' style="cursor: pointer;">CountLer</h1>
+<div id="box">
+<center>
+Here's how it works, displayed with a really fancy diagram
+<p> </p>
+<img src="assets/images/fancydiagram.jpg">
+<p> </p>
+I know it looks bad, I just didn't find any other way to explain it better than that lmao
+</center>
+</div>
+</body>

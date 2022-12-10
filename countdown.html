@@ -11,13 +11,14 @@
 <meta property="og:image" content="https://i.ibb.co/5x2DGtH/3-sin-t-tulo-20221205011201.png" />
 <meta property="og:description" content="Well, click to see it, i guess." />
 <meta name="theme-color" content="#FF0000">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/PButcher/flipdown@master/src/flipdown.css">
+<script src="https://cdn.jsdelivr.net/gh/PButcher/flipdown@master/src/flipdown.js"></script>
 <!-- Include this to make the og:image larger -->
 <meta name="twitter:card" content="summary_large_image">
 <title>Countdown</title>
-<center><div class="spinner" id="spinner"></div></center>
+<center><div class="spinner" id="spinner" hidden></div></center>
 <center><h1 id="name"></h1></center>
-<center><p id="countdown"></p></center>
+<center><div id="flipdown" class="flipdown flipdown__theme-dark"></div></center>
 <center><b><p id="credits">If you find any error, add me on discord as "G1nX#0746".</p></b></center>
 <img src="https://http.cat/400" id="badrequest" hidden class="center">
 <style>
@@ -73,14 +74,9 @@ console.log(datetocount);
 var name = urlParams.get('name')
 console.log(name);
 
-document.getElementById("name").innerHTML = "Loading countdown..."
+document.getElementById("name").innerHTML = name
 
 var darkModeEnabled = urlParams.get("darkModeEnable")
-
-if (darkModeEnabled == 'true') {
-var root = document.getElementsByTagName( 'html' )[0]; // '0' to assign the first (and only `HTML` tag)
-root.setAttribute( 'class', 'darkmode' );
-}
 
 var font = urlParams.get('font')
 
@@ -92,6 +88,8 @@ try {
 catch(err) {
   console.error("Oops! There was an error. " + err.name)
 }
+
+document.body.querySelector('#flipdown').classList.toggle('flipdown__theme-dark');
 
 var timetocount = urlParams.get('time')
 var timezone = urlParams.get('timezone').replaceAll("_", " ")
@@ -127,7 +125,9 @@ console.log(datetocount);
 var countDownDate = new Date(datetocount).getTime();
 
 function epoch(date) {
-  return Date.parse(date)
+  let dt = Date.parse(date)
+  let i = Math.round(dt / 60);
+  return dt
 }
 
 function checkTimezoneText() {
@@ -139,49 +139,36 @@ return " | The timezone of this countdown depends on your local day and time.";
 
 }
 
-// Update the count down every 1 second
-var x = setInterval(function() {
-
-  var now = 0
-  var dateToday = 0
+var now = 0
+var dateToday = 0
 
   if (timezone != "userdependant") {
-  dateToday = epoch(moment().tz(timezone).format("YYYY-MM-DD HH:mm:ss"))
-  now = dateToday
-  console.log(dateToday) // This is the epoch timestamp of the timezone's time
+  var ledate = epoch(moment(countDownDate).tz(timezone).format("YYYY-MM-DD HH:mm:ss"))
+  var diff = ledate.toString()
+  dateToday = diff.slice(0, -3); //The default countdown is in epoch MILISECONDS. What this does is that it transforms it into seconds.
+  now = Number(dateToday)
+  console.log(now) // This is the epoch timestamp of the timezone's time
   } else {
   now = new Date().getTime();
   console.log(now)
   }
 
-  // Find the distance between now and the count down date
-  var distance = countDownDate - now;
 
-  // Time calculations for days, hours, minutes and seconds
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  
-  $("#spinner").hide();
-  document.getElementById("name").innerHTML = name
-  // Display the result in the element with id="demo"
-  document.getElementById("countdown").innerHTML = days + " days - " + hours + " hours - "
-  + minutes + " minutes - " + seconds + " seconds" + checkTimezoneText()
 
-  // If the count down is finished, write some text
-  if (distance < 0) {
-    clearInterval(x);
-    document.getElementById("countdown").innerHTML = "EXPIRED";
-  }
-}, 1000);
+if (darkModeEnabled == 'true') {
+var root = document.getElementsByTagName('html')[0]; // '0' to assign the first (and only `HTML` tag)
+root.setAttribute('class', 'darkmode');
+var countdownObj = new FlipDown(now, {
+  theme: "light",
+}).start();
+} else {
+var countdownObj = new FlipDown(now, {
+  theme: "dark",
+}).start();
+}
 
-var errormsg = "Sorry, there was an error displaying the countdown."
-
-window.onerror = function(error) {
-  // do something clever here
-  alert(errormsg);
-};
-
+  countdownObj.ifEnded(() => {
+    document.getElementById("flipdown").innerHTML = "<p>Sorry. This countdown has ended.</p>"
+  });
 </script>
 </head>
